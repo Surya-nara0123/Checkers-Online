@@ -1,6 +1,7 @@
 import pygame as pyg
 import sys
 import PawnClass.functions
+import KingClass.functions
 
 class gameWindow:
     def __init__(self):
@@ -9,7 +10,7 @@ class gameWindow:
         self.boardImage = pyg.transform.flip(pyg.transform.scale(pyg.image.load("Assets/CheckersBoard.png"), (self.width, self.height)), False, True)
         self.run = True
         self.turn = 'bn'
-        self.selected = (0, 0)
+        self.selected = (-1, 0)
         self.definitions()
         self.main()
 
@@ -38,7 +39,7 @@ class gameWindow:
                         self.PeicesPositions[i].append('bp')
                     else:
                         self.PeicesPositions[i].append('')
-        self.PeicesPositions[5][2] = 'wp'
+        #self.PeicesPositions[5][6] = 'wp'
         for i in range(8):
             for j in range(8):
                 if self.PeicesPositions[i][j] != '':
@@ -48,8 +49,9 @@ class gameWindow:
         self.moves = []
         for i in range(8):
             for j in range(8):
-                if self.PeicesPositions[i][j] != '' and self.PeicesPositions[i][j][0] == self.turn[0]:
+                if self.PeicesPositions[i][j] != '' and self.PeicesPositions[i][j][0] == self.turn[0] == 'b':
                     if self.PeicesPositions[i][j][1] == 'p':
+                        # Pawn settings
                         #Now to check diogionally upward 2 positions
                         #condition to check for not forced moves
                         if j != 0 and j != 7:
@@ -66,23 +68,170 @@ class gameWindow:
                                     self.moves.append({'initial position':(i, j), 'final position':(i-1, j+1), 'type of move':'n'})
                         #condition of forced move
                         if j != 0 and j != 7:
-                            if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != self.turn[0]:
+                            if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'b':
                                 if j != 1 and i != 1:
                                     if self.PeicesPositions[i-2][j-2] == '':
                                         self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
-                            if self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != self.turn[0]:
+                            if self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'b':
                                 if j != 6 and i != 1:
                                     if self.PeicesPositions[i-2][j+2] == '':
                                         self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
                         else:
                             if j == 7 and i != 1:
-                                if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != self.turn[0]:
+                                if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'b':
                                     if self.PeicesPositions[i-2][j-2] == '':
                                         self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
                             elif j == 0 and i != 1:
-                                if self.PeicesPositions[i-2][j+2] == '':
+                                if self.PeicesPositions[i-2][j+2] == '' and self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'b':
                                         self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
-
+                    #else:
+                    #    #king setting
+                    #    #Now to check diogionally upward and downward 2 positions
+                    #    #condition to check for not forced moves
+                    #    if j != 0 and j != 7:
+                    #        if self.PeicesPositions[i-1][j-1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i-1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i-1][j+1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i-1, j+1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j-1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j+1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                    #    else:
+                    #        if j == 7:
+                    #            if self.PeicesPositions[i-1][j-1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i-1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j-1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                    #        else:
+                    #            if self.PeicesPositions[i-1][j+1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i-1, j+1), 'type of move':'n'})
+                    #            if self.PeicesPositions[i+1][j+1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                    #    #condition of forced move
+                    #    if j != 0 and j != 7:
+                    #        if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'b':
+                    #            if j != 1 and i != 1:
+                    #                if self.PeicesPositions[i-2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'b':
+                    #            if j != 6 and i != 1:
+                    #                if self.PeicesPositions[i-2][j+2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'w':
+                    #            if j != 1 and i != 6:
+                    #                if self.PeicesPositions[i+2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'w':
+                    #            if j != 6 and i != 6:
+                    #                if self.PeicesPositions[i+2][j+2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
+                    #    else:
+                    #        if j == 7 and i != 1:
+                    #            if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'b':
+                    #                if self.PeicesPositions[i-2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
+                    #        elif j == 0 and i != 1:
+                    #            if self.PeicesPositions[i-2][j+2] == '' and self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'b':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
+                    #        if j == 7 and i != 6:
+                    #            if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'w':
+                    #                if self.PeicesPositions[i+2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                    #        elif j == 0 and i != 6:
+                    #            if self.PeicesPositions[i+2][j+2] == ''  and self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'b':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
+                elif self.PeicesPositions[i][j] != '' and self.PeicesPositions[i][j][0] == self.turn[0] == 'w':
+                    if self.PeicesPositions[i][j][1] == 'p':
+                        #Now to check diogionally upward 2 positions
+                        #condition to check for not forced moves
+                        if j != 0 and j != 7:
+                            if self.PeicesPositions[i+1][j-1] == '':
+                                self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                            if self.PeicesPositions[i+1][j+1] == '':
+                                self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                        else:
+                            if j == 7:
+                                if self.PeicesPositions[i+1][j-1] == '':
+                                    self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                            else:
+                                if self.PeicesPositions[i+1][j+1] == '':
+                                    self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                        #condition of forced move
+                        if j != 0 and j != 7:
+                            if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'b':
+                                if j != 1 and i != 6:
+                                    if self.PeicesPositions[i+2][j-2] == '':
+                                        self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                            if self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'b':
+                                if j != 6 and i != 6:
+                                    if self.PeicesPositions[i+2][j+2] == '':
+                                        self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
+                        else:
+                            if j == 7 and i != 6:
+                                if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'b':
+                                    if self.PeicesPositions[i+2][j-2] == '':
+                                        self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                            elif j == 0 and i != 6:
+                                if self.PeicesPositions[i+2][j+2] == ''  and self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'b':
+                                        self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
+                    #else:
+                    #    #king setting
+                    #    #Now to check diogionally upward and downward 2 positions
+                    #    #condition to check for not forced moves
+                    #    if j != 0 and j != 7:
+                    #        if self.PeicesPositions[i-1][j-1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i-1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i-1][j+1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i-1, j+1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j-1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j+1] == '':
+                    #            self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                    #    else:
+                    #        if j == 7:
+                    #            if self.PeicesPositions[i-1][j-1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i-1, j-1), 'type of move':'n'})
+                    #        if self.PeicesPositions[i+1][j-1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i+1, j-1), 'type of move':'n'})
+                    #        else:
+                    #            if self.PeicesPositions[i-1][j+1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i-1, j+1), 'type of move':'n'})
+                    #            if self.PeicesPositions[i+1][j+1] == '':
+                    #                self.moves.append({'initial position':(i, j), 'final position':(i+1, j+1), 'type of move':'n'})
+                    #    #condition of forced move
+                    #    if j != 0 and j != 7:
+                    #        if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'w':
+                    #            if j != 1 and i != 1:
+                    #                if self.PeicesPositions[i-2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'w':
+                    #            if j != 6 and i != 1:
+                    #                if self.PeicesPositions[i-2][j+2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'w':
+                    #            if j != 1 and i != 6:
+                    #                if self.PeicesPositions[i+2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                    #        if self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'w':
+                    #            if j != 6 and i != 6:
+                    #                if self.PeicesPositions[i+2][j+2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
+                    #    else:
+                    #        if j == 7 and i != 1:
+                    #            if self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1] != '' and self.PeicesPositions[i-1][j-1][0] != 'w':
+                    #                if self.PeicesPositions[i-2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j-2), 'type of move':'f'})
+                    #        elif j == 0 and i != 1:
+                    #            if self.PeicesPositions[i-2][j+2] == '' and self.PeicesPositions[i-1][j+1] != '' and self.PeicesPositions[i-1][j+1][0] != 'b':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i-2, j+2), 'type of move':'f'})
+                    #        if j == 7 and i != 6:
+                    #            if self.PeicesPositions[i+1][j-1] != '' and self.PeicesPositions[i+1][j-1][0] != 'w':
+                    #                if self.PeicesPositions[i+2][j-2] == '':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j-2), 'type of move':'f'})
+                    #        elif j == 0 and i != 6:
+                    #            if self.PeicesPositions[i+2][j+2] == ''  and self.PeicesPositions[i+1][j+1] != '' and self.PeicesPositions[i+1][j+1][0] != 'w':
+                    #                    self.moves.append({'initial position':(i, j), 'final position':(i+2, j+2), 'type of move':'f'})
     def filterMoves(self):
         # checking if there is any forced move possible
         flag = False
@@ -97,6 +246,92 @@ class gameWindow:
                     self.moves.pop(i)
                 else:
                     i += 1
+                    
+    def move(self, moveDict):
+        # to move a piece if it is not a forced move and not succeding a forced move
+        if moveDict['type of move'] == 'n' and self.turn[1] == 'n':
+            self.PeicesPositions[moveDict['final position'][0]][moveDict['final position'][1]] = self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]]
+            self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]] = ''
+            for i in self.PeicesClass:
+                if i[0] == moveDict['initial position'][0] and i[1] == moveDict['initial position'][1]:
+                    i[0], i[1] = moveDict['final position'][0], moveDict['final position'][1]
+                    i[-1].spriteRect.center = self.boardPositions[moveDict['final position'][0]][moveDict['final position'][1]].center
+                    if moveDict['final position'][0] == 0 and self.turn[0] == 'b':
+                        i[-1] = KingClass.functions.King('b', *i[-1].spriteRect.center)
+                        print('hello')
+            if self.turn == 'wn':
+                self.turn = 'bn'
+            else:
+                self.turn = 'wn'
+        # to move forced peices
+        elif moveDict['type of move'] == 'f' and self.turn[1] == 'n':
+            self.PeicesPositions[moveDict['final position'][0]][moveDict['final position'][1]] = self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]]
+            self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]] = ''
+            self.PeicesPositions[(moveDict['initial position'][0]+moveDict['final position'][0])//2][(moveDict['initial position'][1]+moveDict['final position'][1])//2] = ''
+            j = 0
+            while j < len(self.PeicesClass):
+                i = self.PeicesClass[j]
+                if i[0] == moveDict['initial position'][0] and i[1] == moveDict['initial position'][1]:
+                    i[0], i[1] = moveDict['final position'][0], moveDict['final position'][1]
+                    i[-1].spriteRect.center = self.boardPositions[moveDict['final position'][0]][moveDict['final position'][1]].center
+                    self.findMoves()
+                    flag = False
+                    for k in self.moves:
+                        if k['type of move'] == 'f':
+                            flag = True
+                    if flag:
+                        if self.turn == 'wn':
+                            self.turn = f'wf {i[0]} {i[1]}'
+                        else:
+                            self.turn = f'bf {i[0]} {i[1]}'
+                    else:
+                        if self.turn == 'wn':
+                            self.turn = 'bn'
+                        else:
+                            self.turn = 'wn'
+                    if moveDict['final position'][0] == 0 and self.turn[0] == 'b':
+                        i[-1] = KingClass.functions.King('b', *i[-1].spriteRect.center)
+                        if self.turn == 'wn':
+                            self.turn = 'bn'
+                        else:
+                            self.turn = 'wn'
+                elif i[0] == (moveDict['initial position'][0]+moveDict['final position'][0])//2 and i[1] == (moveDict['initial position'][1]+moveDict['final position'][1])//2:
+                    self.PeicesClass.pop(j)
+                    j -= 1
+                j += 1
+        elif moveDict['type of move'] == 'f' and self.turn[1] == 'f':
+            if (int(self.turn[3]), int(self.turn[5])) == moveDict['initial position']:
+                self.PeicesPositions[moveDict['final position'][0]][moveDict['final position'][1]] = self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]]
+                self.PeicesPositions[moveDict['initial position'][0]][moveDict['initial position'][1]] = ''
+                self.PeicesPositions[(moveDict['initial position'][0]+moveDict['final position'][0])//2][(moveDict['initial position'][1]+moveDict['final position'][1])//2] = ''
+                j = 0
+                while j < len(self.PeicesClass):
+                    i = self.PeicesClass[j]
+                    if i[0] == moveDict['initial position'][0] and i[1] == moveDict['initial position'][1]:
+                        i[0], i[1] = moveDict['final position'][0], moveDict['final position'][1]
+                        i[-1].spriteRect.center = self.boardPositions[moveDict['final position'][0]][moveDict['final position'][1]].center
+                        self.findMoves()
+                        flag = False
+                        for k in self.moves:
+                            if k['type of move'] == 'f':
+                                flag = True
+                        if flag:
+                            if self.turn == 'wn':
+                                self.turn = f'wf {i[0]} {i[1]}'
+                            else:
+                                self.turn = f'bf {i[0]} {i[1]}'
+                        else:
+                            if self.turn == 'wn':
+                                self.turn = 'bn'
+                            else:
+                                self.turn = 'wn'
+                        if moveDict['final position'][0] == 0 and self.turn[0] == 'b':
+                            i[-1] = KingClass.functions.King('b', *i[-1].spriteRect.center)
+                    elif i[0] == (moveDict['initial position'][0]+moveDict['final position'][0])//2 and i[1] == (moveDict['initial position'][1]+moveDict['final position'][1])//2:
+                        self.PeicesClass.pop(j)
+                        j -= 1
+                    j += 1
+
 
     def main(self):
         while self.run:
@@ -115,10 +350,21 @@ class gameWindow:
                     pyg.quit()
                     sys.exit()
                 elif event.type == pyg.MOUSEBUTTONDOWN:
+                    flag = False
                     for i in range(8):
                         for j in range(8):
                             if self.boardPositions[i][j].collidepoint(pyg.mouse.get_pos()):
-                                self.selected = (i, j)
+                                for m in self.moves:
+                                    if (i, j) == m['initial position']:
+                                        self.selected = (i, j)
+                                        flag = True
+                                    if (i, j) == m['final position'] and m['initial position'] == self.selected:
+                                        if self.selected != (-1, 0):
+                                            self.move(m)
+                                            print(self.moves)
+                                            print(*self.PeicesPositions,sep='\n')
+                    if flag == False:
+                        self.selected = (-1, 0)
 
             pyg.display.update()
 
