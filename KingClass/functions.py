@@ -9,4 +9,5 @@ class King:
             self.spriteImage = pyg.image.load("Assets/KingBlackImage.png")
         else:
             self.spriteImage = pyg.image.load("Assets/KingWhiteImage.png")
-        self.position = (x, y)
+        self.spriteRect = self.spriteImage.get_rect()
+        self.spriteRect.center = (x, y)
