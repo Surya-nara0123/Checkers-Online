@@ -6,9 +6,10 @@ import KingClass.functions
 class gameWindow:
     def __init__(self):
         self.height = self.width = 500
+        pyg.font.init()
         self.window = pyg.display.set_mode((self.width+220, self.height))
-        self.sidebar = pyg.transform.scale(pyg.image.load('Assets/sideScreen.png'), (200, self.height))
-        self.boardImage = pyg.transform.flip(pyg.transform.scale(pyg.image.load("Assets/CheckersBoard.png"), (self.width, self.height)), False, True)
+        self.sidebar = pyg.transform.scale(pyg.image.load('/Users/surya/Documents/Checkers-Online/Assets/sideScreen.png'), (200, self.height))
+        self.boardImage = pyg.transform.flip(pyg.transform.scale(pyg.image.load("/Users/surya/Documents/Checkers-Online/Assets/CheckersBoard.png"), (self.width, self.height)), False, True)
         self.run = True
         self.turn = 'bn'
         self.selected = (-1, 0)
@@ -384,6 +385,14 @@ class gameWindow:
         while self.run:
             self.window.blit(self.boardImage, (0, 0))
             self.window.blit(self.sidebar, (self.width+10, 0))
+            for i in range(8):
+                for j in range(8):
+                        text = pyg.font.SysFont('Arial Black',15)
+                        tempSurface = pyg.Surface((self.boardPositions[i][j].width, self.boardPositions[i][j].height))
+                        img = text.render(f'{65-((i*8)+j+1)}', True, (255, 255, 255))
+                        tempSurface.set_alpha(70)
+                        tempSurface.blit(img, (0, 0))
+                        self.window.blit(tempSurface, self.boardPositions[i][j].topleft)
             for i in range(len(self.PeicesClass[::-1])):
                 self.window.blit(self.PeicesClass[i][-1].spriteImage, self.PeicesClass[i][-1].spriteRect)
                 self.findMoves()
@@ -408,7 +417,6 @@ class gameWindow:
                                         flag = True
                                     if (i, j) == m['final position'] and m['initial position'] == self.selected:
                                         if self.selected != (-1, 0):
-                                            print(*self.PeicesPositions,sep='\n')
                                             self.move(m)
                                             
                     if flag == False:

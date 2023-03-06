@@ -1,33 +1,7 @@
-import socket, threading, sys, datetime
-clientList = []
+import mysql.connector as m
 
-def clientHandler(c, addr):
-    while True:
-        clientList.append((c, addr))
-        while True:
-            try:
-                board = c.recv(2048).decode("utf-8")
-            except Exception as m:
-                board = ''
-            if board != '':
-                for socket, us, m  in clientList:
-                    try:
-                        socket.send(f"{board[::-1]}".encode("utf-8"))
-                    except BrokenPipeError:
-                        pass
-def function():
+serverDatabase = m.connect(user='root', password='1234', host='smt-smt-smt-smt')
 
-    while True:
-        c, addr = s.accept()
-        threading.Thread(target=clientHandler, args=(c, addr)).start()
-    
-if __name__ == "__main__":
-    try:
-        s = socket.socket()
-        port = 12345
-        s.bind(('', port))
-        s.listen(1)
-        function()
-    except:
-        pass
-    
+cursorObject = serverDatabase.cursor()
+
+cursorObject.execute("")
