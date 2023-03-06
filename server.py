@@ -4,8 +4,6 @@ clientList = []
 def clientHandler(c, addr):
     while True:
         clientList.append((c, addr))
-        #c.close()
-        #print("hello, ", username)
         while True:
             try:
                 board = c.recv(2048).decode("utf-8")
@@ -21,19 +19,14 @@ def function():
 
     while True:
         c, addr = s.accept()
-        #print ('Got connection from', addr )
-        #c.send('Thank you for connecting'.encode())
         threading.Thread(target=clientHandler, args=(c, addr)).start()
     
 if __name__ == "__main__":
     try:
-        s = socket.socket()		
-        #print ("Socket successfully created")
+        s = socket.socket()
         port = 12345
-        s.bind(('', port))		
-        #print ("socket binded to %s" %(port))
-        s.listen(1)	
-        #print ("socket is listening")
+        s.bind(('', port))
+        s.listen(1)
         function()
     except:
         pass
