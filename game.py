@@ -8,6 +8,8 @@ class gameWindow:
         self.height = self.width = 500
         pyg.font.init()
         self.window = pyg.display.set_mode((self.width+220, self.height))
+        self.icon = pyg.image.load("/Users/surya/Documents/Checkers-Online/Assets/KingWhiteImage.png")
+        pyg.display.set_icon(self.icon)
         self.sidebar = pyg.transform.scale(pyg.image.load('/Users/surya/Documents/Checkers-Online/Assets/sideScreen.png'), (200, self.height))
         self.boardImage = pyg.transform.flip(pyg.transform.scale(pyg.image.load("/Users/surya/Documents/Checkers-Online/Assets/CheckersBoard.png"), (self.width, self.height)), False, True)
         self.run = True
